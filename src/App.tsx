@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { toast } from "@/components/ui/use-toast"
 import {Label} from "@/components/ui/label.tsx";
-
+import {ImageGallery} from "@/components/ui/Gallery.tsx";
 const FormSchema = z.object({
     authorName: z.string().min(2, {
         message: "Username must be at least 2 characters.",
@@ -61,7 +61,7 @@ function App() {
         }
 
         try {
-            const response = await fetch('http://localhost:3000/posts', { // Измени URL на актуальный путь к твоему API
+            const response = await fetch('http://localhost:3001/posts', { // Измени URL на актуальный путь к твоему API
                 method: 'POST',
                 body: formData,
             });
@@ -87,6 +87,7 @@ function App() {
     }
 
   return (
+      <>
           <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
                   <FormField
@@ -141,6 +142,8 @@ function App() {
                   <Button type="submit">Submit</Button>
               </form>
           </Form>
+      <ImageGallery/>
+      </>
   )
 }
 
