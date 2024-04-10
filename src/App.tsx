@@ -17,6 +17,15 @@ import { Input } from "@/components/ui/input"
 import { toast } from "@/components/ui/use-toast"
 import {Label} from "@/components/ui/label.tsx";
 import {ImageGallery} from "@/components/ui/Gallery.tsx";
+import {
+    NavigationMenu,
+    NavigationMenuContent,
+    NavigationMenuItem,
+    NavigationMenuLink,
+    NavigationMenuList,
+    NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu"
+import { Routes, Route } from 'react-router-dom'
 const FormSchema = z.object({
     authorName: z.string().min(2, {
         message: "Username must be at least 2 characters.",
@@ -48,7 +57,7 @@ function App() {
         const inputElement = document.getElementById('picture') as HTMLInputElement;
         const file = inputElement.files ? inputElement.files[0] : null;
 
-        if (file && file.size > 2 * 1024 * 1024) { // размер файла больше 2MB
+        if (file && file.size > 2 * 1024 * 1024) {
             toast({
                 title: "Error:",
                 description: "File size must be less than 2MB",
@@ -61,7 +70,7 @@ function App() {
         }
 
         try {
-            const response = await fetch('http://localhost:3001/posts', { // Измени URL на актуальный путь к твоему API
+            const response = await fetch('http://localhost:3001/posts', {
                 method: 'POST',
                 body: formData,
             });
@@ -76,7 +85,6 @@ function App() {
                 title: "Success",
                 description: "Post has been uploaded.",
             });
-            // Дополнительно можно обработать результат от сервера
         } catch (error) {
             toast({
                 title: "Error",
@@ -87,63 +95,87 @@ function App() {
     }
 
   return (
-      <>
-          <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
-                  <FormField
-                      control={form.control}
-                      name="authorName"
-                      render={({field}) => (
-                          <FormItem>
-                              <FormLabel>authorName</FormLabel>
-                              <FormControl>
-                                  <Input placeholder="" {...field} />
-                              </FormControl>
-                              <FormDescription>
-                              </FormDescription>
-                              <FormMessage/>
-                          </FormItem>
-                      )}
-                  />
-                  <FormField
-                      control={form.control}
-                      name="authorEmail"
-                      render={({field}) => (
-                          <FormItem>
-                              <FormLabel>authorEmail</FormLabel>
-                              <FormControl>
-                                  <Input placeholder="" {...field} />
-                              </FormControl>
-                              <FormDescription>
-                              </FormDescription>
-                              <FormMessage/>
-                          </FormItem>
-                      )}
-                  />
-                  <FormField
-                      control={form.control}
-                      name="comment"
-                      render={({field}) => (
-                          <FormItem>
-                              <FormLabel>comment</FormLabel>
-                              <FormControl>
-                                  <Input placeholder="" {...field} />
-                              </FormControl>
-                              <FormDescription>
-                              </FormDescription>
-                              <FormMessage/>
-                          </FormItem>
-                      )}
-                  />
-                  <div className="grid w-full max-w-sm items-center gap-1.5">
-                      <Label htmlFor="picture">Picture</Label>
-                      <Input id="picture" type="file"/>
-                  </div>
-                  <Button type="submit">Submit</Button>
-              </form>
-          </Form>
-      <ImageGallery/>
-      </>
+      <Routes>
+          <Route path="/" element={
+              <>
+                  <header>
+                      <NavigationMenu>
+                          <NavigationMenuList>
+                              <NavigationMenuItem>
+                                  <NavigationMenuTrigger>Item One</NavigationMenuTrigger>
+                                  <NavigationMenuContent>
+                                      <NavigationMenuLink href="/about">Link</NavigationMenuLink>
+                                  </NavigationMenuContent>
+                              </NavigationMenuItem>
+                          </NavigationMenuList>
+                      </NavigationMenu>
+                  </header>
+
+
+                  <Form {...form}>
+                      <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
+                          <FormField
+                              control={form.control}
+                              name="authorName"
+                              render={({field}) => (
+                                  <FormItem>
+                                      <FormLabel>authorName</FormLabel>
+                                      <FormControl>
+                                          <Input placeholder="" {...field} />
+                                      </FormControl>
+                                      <FormDescription>
+                                      </FormDescription>
+                                      <FormMessage/>
+                                  </FormItem>
+                              )}
+                          />
+                          <FormField
+                              control={form.control}
+                              name="authorEmail"
+                              render={({field}) => (
+                                  <FormItem>
+                                      <FormLabel>authorEmail</FormLabel>
+                                      <FormControl>
+                                          <Input placeholder="" {...field} />
+                                      </FormControl>
+                                      <FormDescription>
+                                      </FormDescription>
+                                      <FormMessage/>
+                                  </FormItem>
+                              )}
+                          />
+                          <FormField
+                              control={form.control}
+                              name="comment"
+                              render={({field}) => (
+                                  <FormItem>
+                                      <FormLabel>comment</FormLabel>
+                                      <FormControl>
+                                          <Input placeholder="" {...field} />
+                                      </FormControl>
+                                      <FormDescription>
+                                      </FormDescription>
+                                      <FormMessage/>
+                                  </FormItem>
+                              )}
+                          />
+                          <div className="grid w-full max-w-sm items-center gap-1.5">
+                              <Label htmlFor="picture">Picture</Label>
+                              <Input id="picture" type="file"/>
+                          </div>
+                          <Button type="submit">Submit</Button>
+                      </form>
+                  </Form>
+                  <ImageGallery/></>
+          }>
+
+          </Route>
+          <Route path="/about" element={
+              <h1>About</h1>
+          }>
+
+          </Route>
+      </Routes>
   )
 }
 
