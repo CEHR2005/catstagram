@@ -2,17 +2,9 @@ import '../app/globals.css'
 import {zodResolver} from "@hookform/resolvers/zod"
 import {useForm} from "react-hook-form"
 import {z} from "zod"
-
+import {Toaster} from "@/components/ui/toaster"
 import {Button} from "@/components/ui/button"
-import {
-    Form,
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "@/components/ui/form"
+import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage,} from "@/components/ui/form"
 import {Input} from "@/components/ui/input"
 import {toast} from "@/components/ui/use-toast"
 import {Label} from "@/components/ui/label.tsx";
@@ -24,7 +16,7 @@ import {
     NavigationMenuList,
     navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
-import {Routes, Route} from 'react-router-dom'
+import {Route, Routes, useNavigate} from 'react-router-dom'
 import {Link} from "@radix-ui/react-navigation-menu";
 
 
@@ -49,6 +41,7 @@ function App() {
             comment: "",
         },
     })
+    const navigate = useNavigate();
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         const formData = new FormData();
@@ -83,6 +76,7 @@ function App() {
 
             const result = await response.json();
             console.log(result);
+            navigate('/');
             toast({
                 title: "Success",
                 description: "Post has been uploaded.",
@@ -100,8 +94,8 @@ function App() {
     return (
         <>
             <header className="flex items-center justify-between p-6 max-w">
-                <NavigationMenu>
-                    <NavigationMenuList>
+                <NavigationMenu className="border-black border rounded">
+                    <NavigationMenuList className="">
                         <NavigationMenuItem>
                             <Link href="/">
                                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>
@@ -124,70 +118,68 @@ function App() {
             <body className="justify-center px-5 content-center ">
             <Routes>
                 <Route path="/" element={
-                    <>
-                        <ImageGallery/>
-                    </>
+                    <ImageGallery/>
                 }>
                 </Route>
                 <Route path="/post" element={
-                    <>
-                        <Form {...form}>
-                            <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
-                                <FormField
-                                    control={form.control}
-                                    name="authorName"
-                                    render={({field}) => (
-                                        <FormItem>
-                                            <FormLabel>authorName</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="" {...field} />
-                                            </FormControl>
-                                            <FormDescription>
-                                            </FormDescription>
-                                            <FormMessage/>
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name="authorEmail"
-                                    render={({field}) => (
-                                        <FormItem>
-                                            <FormLabel>authorEmail</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="" {...field} />
-                                            </FormControl>
-                                            <FormDescription>
-                                            </FormDescription>
-                                            <FormMessage/>
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name="comment"
-                                    render={({field}) => (
-                                        <FormItem>
-                                            <FormLabel>comment</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="" {...field} />
-                                            </FormControl>
-                                            <FormDescription>
-                                            </FormDescription>
-                                            <FormMessage/>
-                                        </FormItem>
-                                    )}
-                                />
-                                <div className="grid w-full max-w-sm items-center gap-1.5">
-                                    <Label htmlFor="picture">Picture</Label>
-                                    <Input id="picture" type="file"/>
-                                </div>
-                                <Button type="submit">Submit</Button>
-                            </form>
-                        </Form></>
+                    <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
+                            <FormField
+                                control={form.control}
+                                name="authorName"
+                                render={({field}) => (
+                                    <FormItem>
+                                        <FormLabel>authorName</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="" {...field} />
+                                        </FormControl>
+                                        <FormDescription>
+                                        </FormDescription>
+                                        <FormMessage/>
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="authorEmail"
+                                render={({field}) => (
+                                    <FormItem>
+                                        <FormLabel>authorEmail</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="" {...field} />
+                                        </FormControl>
+                                        <FormDescription>
+                                        </FormDescription>
+                                        <FormMessage/>
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="comment"
+                                render={({field}) => (
+                                    <FormItem>
+                                        <FormLabel>comment</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="" {...field} />
+                                        </FormControl>
+                                        <FormDescription>
+                                        </FormDescription>
+                                        <FormMessage/>
+                                    </FormItem>
+                                )}
+                            />
+                            <div className="grid w-full max-w-sm items-center gap-1.5">
+                                <Label htmlFor="picture">Picture</Label>
+                                <Input id="picture" type="file"/>
+                            </div>
+                            <Button type="submit">Submit</Button>
+                        </form>
+                    </Form>
                 }>
                 </Route>
             </Routes>
+            <Toaster/>
             </body>
         </>
     )
