@@ -1,5 +1,5 @@
 # Выбор базового образа
-FROM node:14 AS build
+FROM node:20 AS build
 
 # Создание директории приложения
 WORKDIR /app
