@@ -26,3 +26,17 @@ jobs:
       # Prettier
       - name: Check format with Prettier
         run: npx prettier --check .
+
+      - name: Build Docker image
+        run: docker build . -t senchapencha5/catgram-frontend:${{ github.sha }}
+
+      - name: Log in to DockerHub
+        if: github.ref == 'refs/heads/main'
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Push Docker image to DockerHub
+        if: github.ref == 'refs/heads/main'
+        run: docker push senchapencha5/catgram-frontend:${{ github.sha }}
