@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 // import {Label} from "@/components/ui/label"
-import React, { ReactNode, useState } from "react";
+import React, {ReactNode, useEffect, useState} from "react";
 import { ScrollArea } from "@/components/ui/scroll-area.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import { Comment } from "@/types.ts";
@@ -19,16 +19,23 @@ interface GalleryDialogProps {
   trigger: ReactNode;
   img: string;
   postId: string;
-  comments: Comment[];
+  initialComments: Comment[];
+  authorName: string;
+  dateAdded: string;
 }
 
 const GalleryDialog: React.FC<GalleryDialogProps> = ({
   trigger,
   img,
-  postId,
-  comments,
+  postId, initialComments,
+    authorName, dateAdded
 }) => {
   const [new_comment, setNew_comment] = useState("");
+  const [comments, setComments] = useState(initialComments);
+
+  useEffect(() => {
+    setComments(initialComments);
+  }, [initialComments]);
 
   const handleCommentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNew_comment(event.target.value);
@@ -52,6 +59,10 @@ const GalleryDialog: React.FC<GalleryDialogProps> = ({
 
     if (!response.ok) {
       console.error("Failed to post comment");
+    } else {
+      const post = await response.json();
+      const comment = post.comments[post.comments.length - 1];
+      setComments([...comments, comment]);
     }
 
     setNew_comment("");
@@ -61,9 +72,9 @@ const GalleryDialog: React.FC<GalleryDialogProps> = ({
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit profile</DialogTitle>
+          <DialogTitle>{authorName}</DialogTitle>
           <DialogDescription>
-            Make changes to your profile here. Click save when you're done.
+            Was posted on {new Date(dateAdded).toLocaleDateString()}
           </DialogDescription>
         </DialogHeader>
         <div className="grid grid-cols-2 gap-4 py-4">
@@ -83,7 +94,7 @@ const GalleryDialog: React.FC<GalleryDialogProps> = ({
               {comments.map((comment) => (
                 <>
                   <div key={comment._id} className="text-sm">
-                    {comment.comment}
+                    <b>{comment.authorName}</b>: {comment.comment}
                   </div>
                   <Separator className="my-2" />
                 </>

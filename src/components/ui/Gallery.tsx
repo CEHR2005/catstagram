@@ -26,7 +26,9 @@ function ImageGallery() {
             }
             img={"http://localhost:3001/" + post.image}
             postId={post._id}
-            comments={post.comments}
+            initialComments={post.comments}
+            authorName={post.authorName}
+            dateAdded={post.dateAdded}
           ></GalleryDialog>
         </div>
       ))}
