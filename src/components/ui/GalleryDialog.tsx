@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 // import {Label} from "@/components/ui/label"
-import React, {ReactNode, useEffect, useState} from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import { Comment } from "@/types.ts";
@@ -27,8 +27,10 @@ interface GalleryDialogProps {
 const GalleryDialog: React.FC<GalleryDialogProps> = ({
   trigger,
   img,
-  postId, initialComments,
-    authorName, dateAdded
+  postId,
+  initialComments,
+  authorName,
+  dateAdded,
 }) => {
   const [new_comment, setNew_comment] = useState("");
   const [comments, setComments] = useState(initialComments);
