@@ -15,13 +15,9 @@ import {
 } from "@/components/ui/form";
 import { toast } from "@/components/ui/use-toast.ts";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+import { User } from "@/types.ts";
 const FormSchema = z.object({
-  authorName: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-  authorEmail: z.string().email({
-    message: "Please enter a valid email address.",
-  }),
   comment: z.string().min(2, {
     message: "Comment must be at least 2 characters.",
   }),
@@ -32,16 +28,25 @@ const Post = () => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      authorName: "",
-      authorEmail: "",
       comment: "",
     },
   });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     const formData = new FormData();
-    formData.append("authorName", data.authorName);
-    formData.append("authorEmail", data.authorEmail);
+    const user = Cookies.get("user");
+    if (!user) {
+      console.error("User is not logged in");
+      return;
+    }
+    const userData: User = JSON.parse(user);
+    console.log(user);
+    if (!userData) {
+      console.error("User data is missing");
+      return;
+    }
+    formData.append("authorName", userData.username);
+    formData.append("authorEmail", userData.email);
     formData.append("comment", data.comment);
 
     const inputElement = document.getElementById("picture") as HTMLInputElement;
@@ -87,34 +92,6 @@ const Post = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
-        <FormField
-          control={form.control}
-          name="authorName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>authorName</FormLabel>
-              <FormControl>
-                <Input placeholder="" {...field} />
-              </FormControl>
-              <FormDescription></FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="authorEmail"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>authorEmail</FormLabel>
-              <FormControl>
-                <Input placeholder="" {...field} />
-              </FormControl>
-              <FormDescription></FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <FormField
           control={form.control}
           name="comment"

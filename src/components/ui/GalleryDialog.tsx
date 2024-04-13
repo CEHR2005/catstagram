@@ -13,8 +13,8 @@ import { Input } from "@/components/ui/input";
 import React, { ReactNode, useEffect, useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
-import { Comment } from "@/types.ts";
-
+import { Comment, User } from "@/types.ts";
+import Cookies from "js-cookie";
 interface GalleryDialogProps {
   trigger: ReactNode;
   img: string;
@@ -44,6 +44,17 @@ const GalleryDialog: React.FC<GalleryDialogProps> = ({
   };
 
   const handleCommentSubmit = async () => {
+    const user = Cookies.get("user");
+    if (!user) {
+      console.error("User is not logged in");
+      return;
+    }
+    const userData: User = JSON.parse(user);
+    console.log(user);
+    if (!userData) {
+      console.error("User data is missing");
+      return;
+    }
     const response = await fetch(
       `http://localhost:3001/posts/${postId}/comments`,
       {
@@ -52,8 +63,8 @@ const GalleryDialog: React.FC<GalleryDialogProps> = ({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          authorName: "Your Name",
-          authorEmail: "Your Email",
+          authorName: userData.username,
+          authorEmail: userData.email,
           comment: new_comment,
         }),
       },

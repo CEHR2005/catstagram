@@ -13,8 +13,22 @@ import { Link } from "@radix-ui/react-navigation-menu";
 import Post from "@/components/Post";
 import { Login } from "@/components/Login.tsx";
 import { Register } from "@/components/Register.tsx";
+import Cookies from "js-cookie";
+import { useEffect, useState } from "react";
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const user = Cookies.get("user");
+    console.log(user);
+    setIsLoggedIn(!!user);
+  }, []);
+
+  const handleLogout = () => {
+    Cookies.remove("user");
+    setIsLoggedIn(false);
+  };
   return (
     <>
       <header className="flex items-center justify-between p-6 max-w">
@@ -35,21 +49,38 @@ function App() {
               </Link>
             </NavigationMenuItem>
           </NavigationMenuList>
-          <NavigationMenuList>
-            <NavigationMenuItem>
-              <Link href="/login">
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Login
-                </NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <Link href="/register">
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Register
-                </NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
+          <NavigationMenuList className="ml-auto">
+            {!isLoggedIn ? (
+              <>
+                <NavigationMenuItem>
+                  <Link href="/login">
+                    <NavigationMenuLink
+                      className={navigationMenuTriggerStyle()}
+                    >
+                      Login
+                    </NavigationMenuLink>
+                  </Link>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <Link href="/register">
+                    <NavigationMenuLink
+                      className={navigationMenuTriggerStyle()}
+                    >
+                      Register
+                    </NavigationMenuLink>
+                  </Link>
+                </NavigationMenuItem>
+              </>
+            ) : (
+              <NavigationMenuItem>
+                <button
+                  onClick={handleLogout}
+                  className={navigationMenuTriggerStyle()}
+                >
+                  Logout
+                </button>
+              </NavigationMenuItem>
+            )}
           </NavigationMenuList>
         </NavigationMenu>
       </header>

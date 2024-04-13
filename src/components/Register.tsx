@@ -2,17 +2,18 @@ import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
-import { z, ZodSchema } from "zod";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Cookies from "js-cookie";
 
-const RegisterSchema: ZodSchema<any> = z.object({
+const RegisterSchema = z.object({
   username: z.string(),
   email: z.string().email({ message: "Please enter a valid email address." }),
   password: z.string(),
 });
 
 export const Register = () => {
-  const form = useForm({
+  const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
   });
 
@@ -27,6 +28,9 @@ export const Register = () => {
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
+      const user = await response.json();
+
+      Cookies.set("user", JSON.stringify(user));
 
       toast({
         title: "Success",

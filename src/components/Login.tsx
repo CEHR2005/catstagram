@@ -4,14 +4,19 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import { z, ZodSchema } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Cookies from 'js-cookie';
-const LoginSchema: ZodSchema<any> = z.object({
+import Cookies from "js-cookie";
+type LoginData = {
+  email: string;
+  password: string;
+};
+
+const LoginSchema: ZodSchema<LoginData> = z.object({
   email: z.string().email({ message: "Please enter a valid email address." }),
   password: z.string(),
 });
 
 export const Login = () => {
-  const form = useForm({
+  const form = useForm<LoginData>({
     resolver: zodResolver(LoginSchema),
   });
 
@@ -30,7 +35,7 @@ export const Login = () => {
       const user = await response.json();
 
       // Сохраняем информацию о пользователе в куки
-      Cookies.set('user', JSON.stringify(user));
+      Cookies.set("user", JSON.stringify(user));
 
       toast({
         title: "Success",

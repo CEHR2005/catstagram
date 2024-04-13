@@ -15,3 +15,13 @@ export interface Post {
   dateAdded: string;
   __v: number;
 }
+
+export interface User {
+  username: string;
+  email: string;
+  password: string;
+  _id: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
