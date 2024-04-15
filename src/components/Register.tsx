@@ -5,6 +5,7 @@ import { toast } from "@/components/ui/use-toast";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 const RegisterSchema = z.object({
   username: z.string(),
@@ -13,6 +14,7 @@ const RegisterSchema = z.object({
 });
 
 export const Register = () => {
+  const navigate = useNavigate();
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
   });
@@ -36,6 +38,8 @@ export const Register = () => {
         title: "Success",
         description: "Registered successfully.",
       });
+      navigate("/");
+      window.location.reload();
     } catch (error) {
       toast({
         title: "Error",

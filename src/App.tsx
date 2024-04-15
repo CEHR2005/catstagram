@@ -15,6 +15,7 @@ import { Login } from "@/components/Login.tsx";
 import { Register } from "@/components/Register.tsx";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
+import PostPage from "@/components/PostPage.tsx";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -87,6 +88,7 @@ function App() {
       <body className="justify-center px-5 content-center ">
         <Routes>
           <Route path="/" element={<ImageGallery />}></Route>
+          <Route path="/post/:postId" element={<PostPage />} />
           <Route path="/post" element={<Post />}></Route>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />

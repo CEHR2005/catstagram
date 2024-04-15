@@ -4,6 +4,7 @@ export interface Comment {
   comment: string;
   dateAdded: Date;
   _id: string;
+  replies: Comment[];
 }
 
 export interface Post {
@@ -12,6 +13,7 @@ export interface Post {
   authorName: string;
   authorEmail: string;
   comments: Comment[];
+  comment: string;
   dateAdded: string;
   __v: number;
 }
@@ -23,5 +25,6 @@ export interface User {
   _id: string;
   createdAt: string;
   updatedAt: string;
+  role: string;
   __v: number;
 }

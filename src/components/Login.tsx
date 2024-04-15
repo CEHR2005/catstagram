@@ -5,6 +5,7 @@ import { toast } from "@/components/ui/use-toast";
 import { z, ZodSchema } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 type LoginData = {
   email: string;
   password: string;
@@ -16,6 +17,7 @@ const LoginSchema: ZodSchema<LoginData> = z.object({
 });
 
 export const Login = () => {
+  const navigate = useNavigate();
   const form = useForm<LoginData>({
     resolver: zodResolver(LoginSchema),
   });
@@ -41,6 +43,8 @@ export const Login = () => {
         title: "Success",
         description: "Logged in successfully.",
       });
+      navigate("/");
+      window.location.reload();
     } catch (error) {
       toast({
         title: "Error",
