@@ -30,6 +30,10 @@ const PostPage: React.FC = () => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [replyTo, setReplyTo] = useState<string | null>(null);
   const handleReplyClick = (commentId: string) => {
+    if (commentId === replyTo) {
+      setReplyTo(null);
+      return;
+    }
     setReplyTo(commentId);
   };
   const Nav = useNavigate();
@@ -89,6 +93,7 @@ const PostPage: React.FC = () => {
           ),
         );
         form.reset();
+        setReplyTo(null);
       } else {
         const comment = post.comments[post.comments.length - 1];
         setComments([...comments, comment]);
@@ -112,6 +117,19 @@ const PostPage: React.FC = () => {
     resolver: zodResolver(FormSchema),
   });
   console.log(post);
+  const postdate = post?.dateAdded;
+  let date;
+  let formattedDate = "";
+  if (postdate != null) {
+    date = new Date(postdate);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // months are 0-indexed in JavaScript
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    formattedDate = `${day}-${month}-${year} ${hours}:${minutes}`;
+  }
+
   return (
     <div className="flex gap-4">
       {post && (
@@ -120,7 +138,7 @@ const PostPage: React.FC = () => {
             <b>Author</b>: {post.authorName}
           </p>
           <p>
-            <b>Date added</b>: {post.dateAdded}
+            <b>Date added</b>: {formattedDate}
           </p>
           <p>{post.comment}</p>
           <img
@@ -184,7 +202,10 @@ const PostPage: React.FC = () => {
                   <b>{comment.authorName}</b>: {comment.comment}
                 </p>
                 <button onClick={() => handleReplyClick(comment._id)}>
-                  <Reply className="mr-2 h-4 w-4" />
+                  <Reply
+                    className="mr-2 h-4 w-4"
+                    color={comment._id === replyTo ? "green" : "black"}
+                  />
                 </button>
                 {comment.replies.map((reply) => (
                   <div key={reply._id} className="text-sm resize-y ml-4">
