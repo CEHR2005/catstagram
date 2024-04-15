@@ -35,10 +35,7 @@ export const Login = () => {
       }
 
       const user = await response.json();
-
-      // Сохраняем информацию о пользователе в куки
       Cookies.set("user", JSON.stringify(user));
-
       toast({
         title: "Success",
         description: "Logged in successfully.",
@@ -55,7 +52,14 @@ export const Login = () => {
   };
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)}>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        form.handleSubmit(onSubmit, (errors) => {
+          console.log("Validation errors", errors);
+        })(e);
+      }}
+    >
       <Input {...form.register("email")} placeholder="Email" />
       <Input
         {...form.register("password")}
